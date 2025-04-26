@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  event_date: 2025-04-16 01:42:43
+  current_price: 1.5
+  status: MyString
+  ticket_category: one
+
+two:
+  event_date: 2025-04-16 01:42:43
+  current_price: 1.5
+  status: MyString
+  ticket_category: two

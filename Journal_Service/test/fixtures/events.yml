@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  ticket_id: 1
+  full_name: MyString
+  time: 2025-04-15 11:38:44
+  event_type: MyString
+  status: MyString
+
+two:
+  ticket_id: 1
+  full_name: MyString
+  time: 2025-04-15 11:38:44
+  event_type: MyString
+  status: MyString

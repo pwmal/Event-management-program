@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  ticket: one
+  blocked_at: 2025-04-16 01:50:57
+  reason: MyString
+
+two:
+  ticket: two
+  blocked_at: 2025-04-16 01:50:57
+  reason: MyString
