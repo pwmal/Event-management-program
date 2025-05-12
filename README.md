@@ -7,7 +7,7 @@ git clone git@git-intern.digitalleague.ru:sudja900/final_project.git
 cd final_project
 ```
 
-### Необходимо запустить собрать и запустить контейнеры:
+### Необходимо собрать и запустить контейнеры:
 ```bash
 docker compose build
 
