@@ -3,7 +3,7 @@
 ### Необходимо клонировать репозиторий в нужную директорию
 
 ```bash
-git clone git@git-intern.digitalleague.ru:sudja900/final_project.git
+git clone https://github.com/pwmal/Event-management-program.git
 cd final_project
 ```
 
