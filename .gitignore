@@ -1,0 +1,39 @@
+# Общие настройки
+*.log
+*.pid
+*.swp
+*.swo
+.byebug_history
+coverage/
+.env
+*.sqlite3
+*.sqlite3-journal
+
+# Docker
+**/tmp
+**/log/*
+!**/log/.keep
+**/public/assets
+**/node_modules
+**/.bundle
+**/vendor/bundle
+
+# IDE
+.idea/
+.vscode/
+
+# Rails специфика по каждому сервису
+Ticket_Service/db/*.sqlite3
+Ticket_Service/tmp
+Ticket_Service/log/*
+!Ticket_Service/log/.keep
+
+Visitor_Service/db/*.sqlite3
+Visitor_Service/tmp
+Visitor_Service/log/*
+!Visitor_Service/log/.keep
+
+Journal_Service/db/*.sqlite3
+Journal_Service/tmp
+Journal_Service/log/*
+!Journal_Service/log/.keep

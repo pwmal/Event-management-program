@@ -1,0 +1,143 @@
+version: '3.8'
+
+services:
+  api-gateway:
+    build: ./API_Gateway
+    container_name: api-gateway
+    ports:
+      - "8080:4567"
+    environment:
+      TICKET_SERVICE_URL: http://ticket-service:3000
+      VISITOR_SERVICE_URL: http://visitor-service:3000
+      JOURNAL_SERVICE_URL: http://journal-service:3000
+      RACK_ENV: production
+      PORT: 4567
+
+  ticket-service:
+    build: ./Ticket_Service
+    volumes:
+      - ./Ticket_Service:/app
+    container_name: ticket-service
+    ports:
+      - "3003:3000"
+    depends_on:
+      - ticket_db
+    environment:
+      DB_HOST: ticket-db
+      DB_NAME: ticket_service_development
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+    command: bash -c "bundle exec rails db:create db:migrate && bundle exec rails s -b 0.0.0.0"
+
+  visitor-service:
+    build: ./Visitor_Service
+    volumes:
+      - ./Visitor_Service:/app
+    container_name: visitor-service
+    ports:
+      - "3002:3000"
+    depends_on:
+      - visitor_db
+    environment:
+      DB_HOST: visitor-db
+      DB_NAME: visitor_service_development
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+    command: bash -c "bundle exec rails db:create db:migrate && bundle exec rails s -b 0.0.0.0"
+
+  journal-service:
+    build: ./Journal_Service
+    volumes:
+      - ./Journal_Service:/app
+    container_name: journal-service
+    ports:
+      - "3001:3000"
+    depends_on:
+      - journal_db
+    environment:
+      DB_HOST: journal-db
+      DB_NAME: journal_service_development
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+    command: bash -c "bundle exec rails db:create db:migrate && bundle exec rails s -b 0.0.0.0"
+
+  rabbitmq:
+    image: rabbitmq:management-alpine
+    ports: 
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  sidekiq:
+    build: ./Ticket_Service
+    volumes:
+      - ./Ticket_Service:/app
+    container_name: sidekiq
+    command: bundle exec sidekiq
+    depends_on:
+      - redis
+      - ticket-service
+    environment:
+      REDIS_URL: "redis://redis:6379/0"
+      DB_HOST: ticket-db
+      DB_NAME: ticket_service_development
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+
+  async-tasks-service:
+    build: ./Async_tasks_service
+    volumes:
+      - ./Async_tasks_service:/app
+    depends_on:
+      - rabbitmq
+      - journal-service
+
+  # Контейнеры баз для каждого микросервиса
+  ticket_db:
+    image: postgres:14
+    container_name: ticket-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ticket_service_development
+    volumes:
+      - ticket_pg_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+  visitor_db:
+    image: postgres:14
+    container_name: visitor-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: visitor_service_development
+    volumes:
+      - visitor_pg_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  journal_db:
+    image: postgres:14
+    container_name: journal-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: journal_service_development
+    volumes:
+      - journal_pg_data:/var/lib/postgresql/data
+    ports:
+      - "5431:5432"
+
+volumes:
+  ticket_pg_data:
+  visitor_pg_data:
+  journal_pg_data:
